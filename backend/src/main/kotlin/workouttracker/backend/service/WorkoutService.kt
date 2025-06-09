@@ -21,6 +21,11 @@ class WorkoutService(
     }
 
     // exercise management
+
+    fun getAllExercises(): List<Exercise> {
+        return exerciseRepo.findAll();
+    }
+
     fun getExerciseById(id: String): Optional<Exercise> {
         return exerciseRepo.findById(id)
     }
@@ -29,6 +34,21 @@ class WorkoutService(
         exerciseRepo.save(exercise)
         return exercise
     }
+
+    // tbd
+//    fun updateExercise(id: String, updated: Exercise): Exercise {
+//        return exercise;
+//    }
+
+    fun deleteExercise(id: String) {
+        if (!exerciseRepo.existsById(id)) {
+            throw NoSuchElementException("No exercise with id $id"); // implement custom exception management later
+        }
+        exerciseRepo.deleteById(id);
+    }
+
+
+
 
     // workout management
 
