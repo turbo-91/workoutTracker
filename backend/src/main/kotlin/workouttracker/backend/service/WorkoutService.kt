@@ -4,6 +4,7 @@ import org.slf4j.Logger
 import org.slf4j.LoggerFactory
 import org.springframework.stereotype.Service
 import workouttracker.backend.model.Exercise
+import workouttracker.backend.model.Workout
 import workouttracker.backend.repository.ExerciseRepo
 import workouttracker.backend.repository.WorkoutLogRepo
 import workouttracker.backend.repository.WorkoutRepo
@@ -53,10 +54,11 @@ class WorkoutService(
         exerciseRepo.deleteById(id);
     }
 
-
-
-
     // workout management
+
+    fun getWorkoutById(id: String): Optional<Workout> {
+        return workoutRepo.findById(id);
+    }
 
     // workoutlog management
 }
