@@ -35,10 +35,16 @@ class WorkoutService(
         return exercise
     }
 
-    // tbd
-//    fun updateExercise(id: String, updated: Exercise): Exercise {
-//        return exercise;
-//    }
+    fun updateExercise(id: String, updated: Exercise): Exercise {
+        val existing = exerciseRepo.findById(id)
+            .orElseThrow{NoSuchElementException("Exercise with id: $id not found")};
+        existing.name = updated.name;
+        existing.muscleGroup = updated.muscleGroup;
+        existing.weight = updated.weight;
+        existing.sets = updated.sets;
+        existing.comment = updated.comment;
+        return exerciseRepo.save(existing);
+    }
 
     fun deleteExercise(id: String) {
         if (!exerciseRepo.existsById(id)) {
