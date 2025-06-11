@@ -2,6 +2,7 @@ package workouttracker.backend.service
 
 import org.slf4j.Logger
 import org.slf4j.LoggerFactory
+import workouttracker.backend.exception.WorkoutLogNotFoundException
 import workouttracker.backend.model.WorkoutLog
 import workouttracker.backend.model.enums.TrainingGoal
 import workouttracker.backend.repository.WorkoutLogRepo
@@ -25,7 +26,7 @@ class WorkoutLogService(private val workoutLogRepo: WorkoutLogRepo) {
 
     fun getWorkoutLogByCreatedAt(createdAt: LocalDateTime): List<WorkoutLog> {
         if (!workoutLogRepo.existsByCreatedAt(createdAt)) {
-            throw NoSuchElementException("No workout log with created at $createdAt")
+            throw WorkoutLogNotFoundException("No workout log with created at $createdAt")
         }
         return workoutLogRepo.findByCreatedAt(createdAt);
     }
@@ -45,7 +46,7 @@ class WorkoutLogService(private val workoutLogRepo: WorkoutLogRepo) {
 
     fun updateWorkoutLog(workoutLog: WorkoutLog): WorkoutLog {
         val existing = workoutLogRepo.findById(workoutLog.id)
-            .orElseThrow{NoSuchElementException("No workout log with id: ${workoutLog.id}");}
+            .orElseThrow{WorkoutLogNotFoundException("No workout log with id: ${workoutLog.id}");}
         existing.createdAt = workoutLog.createdAt;
         existing.trainingGoal = workoutLog.trainingGoal;
         existing.workout = workoutLog.workout;
@@ -55,7 +56,7 @@ class WorkoutLogService(private val workoutLogRepo: WorkoutLogRepo) {
 
     fun deleteWorkoutLog(id: String) {
         if (!workoutLogRepo.existsById(id)) {
-            throw NoSuchElementException("No exercise with id: $id");
+            throw WorkoutLogNotFoundException("No exercise with id: $id");
         }
         return workoutLogRepo.deleteWorkoutLogById(id);
     }

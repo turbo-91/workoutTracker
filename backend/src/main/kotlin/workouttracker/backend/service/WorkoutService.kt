@@ -3,6 +3,7 @@ package workouttracker.backend.service
 import org.slf4j.Logger
 import org.slf4j.LoggerFactory
 import org.springframework.stereotype.Service
+import workouttracker.backend.exception.WorkoutNotFoundException
 import workouttracker.backend.model.Exercise
 import workouttracker.backend.model.Workout
 import workouttracker.backend.model.WorkoutLog
@@ -34,7 +35,7 @@ class WorkoutService(
 
     fun getWorkoutByName(name: String): Optional<Workout> {
         if (!workoutRepo.existsByName(name)) {
-            throw NoSuchElementException("No workout with name $name"); // implement custom exception management later
+            throw WorkoutNotFoundException("No workout with name $name"); // implement custom exception management later
         }
         return workoutRepo.findByName(name)
     }
@@ -45,7 +46,7 @@ class WorkoutService(
 
     fun updateWorkout(id: String, updated: Workout): Workout {
         val existing = workoutRepo.findById(id)
-            .orElseThrow{NoSuchElementException("Workout with id: $id not found")};
+            .orElseThrow{WorkoutNotFoundException("Workout with id: $id not found")};
         existing.name = updated.name;
         existing.exercises = updated.exercises;
         existing.comment = updated.comment;
@@ -54,7 +55,7 @@ class WorkoutService(
 
     fun deleteWorkout(id: String) {
         if (!workoutRepo.existsById(id)) {
-            throw NoSuchElementException("No workout with id: $id");
+            throw WorkoutNotFoundException("No workout with id: $id");
         }
         return workoutRepo.deleteById(id);
     }
