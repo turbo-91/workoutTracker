@@ -5,17 +5,21 @@ import org.slf4j.LoggerFactory
 import org.springframework.stereotype.Service
 import workouttracker.backend.model.Exercise
 import workouttracker.backend.model.Workout
+import workouttracker.backend.model.WorkoutLog
+import workouttracker.backend.model.enums.TrainingGoal
 import workouttracker.backend.repository.ExerciseRepo
 import workouttracker.backend.repository.WorkoutLogRepo
 import workouttracker.backend.repository.WorkoutRepo
+import java.time.LocalDateTime
 import java.util.Optional
 
 @Service
 class WorkoutService(
     private val exerciseRepo: ExerciseRepo,
-    private val workoutRepo: WorkoutRepo
+    private val workoutRepo: WorkoutRepo,
+    private val workoutLogRepo: WorkoutLogRepo
 ) {
-    private lateinit var workoutLogRepo: WorkoutLogRepo
+
 
     companion object {
         private val logger: Logger = LoggerFactory.getLogger(WorkoutService::class.java)
@@ -31,7 +35,7 @@ class WorkoutService(
         return exerciseRepo.findById(id)
     }
 
-    fun getExerciseByName(name: String): List<Exercise> {
+    fun getExerciseByName(name: String): Optional<Exercise> {
         if (!exerciseRepo.existsByName(name)) {
             throw NoSuchElementException("No exercise with name $name"); // implement custom exception management later
         }
@@ -71,7 +75,7 @@ class WorkoutService(
         return workoutRepo.findAll();
     }
 
-    fun getWorkoutByName(name: String): List<Workout> {
+    fun getWorkoutByName(name: String): Optional<Workout> {
         if (!exerciseRepo.existsByName(name)) {
             throw NoSuchElementException("No exercise with name $name"); // implement custom exception management later
         }
@@ -99,4 +103,49 @@ class WorkoutService(
     }
 
     // workoutlog management
+
+    fun getWorkoutLogById(id: String): Optional<WorkoutLog> {
+        return workoutLogRepo.findById(id);
+    }
+
+    fun getAllWorkoutLogs(): List<WorkoutLog> {
+        return workoutLogRepo.findAll();
+    }
+
+    fun getWorkoutLogByCreatedAt(createdAt: LocalDateTime): List<WorkoutLog> {
+    if (!workoutLogRepo.existsByCreatedAt(createdAt)) {
+        throw NoSuchElementException("No workout log with created at $createdAt")
+    }
+        return workoutLogRepo.findByCreatedAt(createdAt);
+    }
+
+    fun getWorkoutLogByTrainingGoal(trainingGoal: TrainingGoal): List<WorkoutLog> {
+        return workoutLogRepo.findByTrainingGoal(trainingGoal);
+    }
+
+    fun getWorkoutLogByWorkout(workoutId: String): List<WorkoutLog> {
+        return workoutLogRepo.findByWorkoutId(workoutId);
+    }
+
+    fun createWorkoutLog(workoutLog: WorkoutLog): WorkoutLog {
+        workoutLogRepo.save(workoutLog);
+        return workoutLogRepo.save(workoutLog);
+    }
+
+    fun updateWorkoutLog(workoutLog: WorkoutLog): WorkoutLog {
+        val existing = workoutLogRepo.findById(workoutLog.id)
+            .orElseThrow{NoSuchElementException("No workout log with id: ${workoutLog.id}");}
+        existing.createdAt = workoutLog.createdAt;
+        existing.trainingGoal = workoutLog.trainingGoal;
+        existing.workout = workoutLog.workout;
+        existing.comment = workoutLog.comment;
+        return workoutLogRepo.save(existing);
+    }
+
+    fun deleteWorkoutLog(id: String) {
+        if (!workoutLogRepo.existsById(id)) {
+            throw NoSuchElementException("No exercise with id: $id");
+        }
+        return workoutLogRepo.deleteWorkoutLogById(id);
+    }
 }

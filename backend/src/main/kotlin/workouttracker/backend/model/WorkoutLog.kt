@@ -10,8 +10,8 @@ import java.time.LocalDateTime
 data class WorkoutLog(
     @Id val id: String,
     @CreatedDate
-    val createdAt: LocalDateTime? = null,
-    val trainingGoal: TrainingGoal,
-    val workout: Workout,
-    val comment: String = ""
+    var createdAt: LocalDateTime? = null,
+    var trainingGoal: TrainingGoal,
+    var workout: Workout,
+    var comment: String = ""
 )
