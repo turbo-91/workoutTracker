@@ -5,6 +5,6 @@ import org.springframework.data.mongodb.core.mapping.Document
 
 @Document(collection = "workout")
 data class Workout(@Id val id: String,
-                   val name: String,
-                   val exercises: List<Exercise>,
-                   val comment: String = "")
+                   var name: String,
+                   var exercises: List<Exercise>,
+                   var comment: String = "")

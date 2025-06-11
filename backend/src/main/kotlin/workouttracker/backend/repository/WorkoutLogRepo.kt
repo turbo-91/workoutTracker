@@ -8,6 +8,9 @@ import java.time.LocalDateTime
 
 @Repository
 interface WorkoutLogRepo : MongoRepository<WorkoutLog, String> {
-    fun findByCreatedAt(createdAt: LocalDateTime): MutableList<WorkoutLog>
+    fun findByCreatedAt(createdAt: LocalDateTime): List<WorkoutLog>
+    fun existsByCreatedAt(createdAt: LocalDateTime): Boolean;
     fun findByTrainingGoal(trainingGoal: TrainingGoal): List<WorkoutLog>
+    fun findByWorkoutId(workoutId: String): List<WorkoutLog>
+    fun deleteWorkoutLogById(workoutId: String);
 }
