@@ -8,4 +8,5 @@ import java.util.*
 @Repository
 interface WorkoutRepo : MongoRepository<Workout, String> {
     fun findByName(name : String) : Optional<Workout>
+    fun existsByName(name: String): Boolean
 }
