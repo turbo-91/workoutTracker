@@ -31,6 +31,13 @@ class WorkoutService(
         return exerciseRepo.findById(id)
     }
 
+    fun getExerciseByName(name: String): List<Exercise> {
+        if (!exerciseRepo.existsByName(name)) {
+            throw NoSuchElementException("No exercise with name $name"); // implement custom exception management later
+        }
+        return exerciseRepo.findByName(name)
+    }
+
     fun createExercise(exercise: Exercise): Exercise {
         exerciseRepo.save(exercise)
         return exercise
@@ -58,6 +65,37 @@ class WorkoutService(
 
     fun getWorkoutById(id: String): Optional<Workout> {
         return workoutRepo.findById(id);
+    }
+
+    fun getAllWorkouts(): List<Workout> {
+        return workoutRepo.findAll();
+    }
+
+    fun getWorkoutByName(name: String): List<Workout> {
+        if (!exerciseRepo.existsByName(name)) {
+            throw NoSuchElementException("No exercise with name $name"); // implement custom exception management later
+        }
+        return workoutRepo.findByName(name)
+    }
+
+    fun createWorkout(workout: Workout): Workout {
+        return workoutRepo.save(workout);
+    }
+
+    fun updateWorkout(id: String, updated: Workout): Workout {
+        val existing = workoutRepo.findById(id)
+            .orElseThrow{NoSuchElementException("Workout with id: $id not found")};
+        existing.name = updated.name;
+        existing.exercises = updated.exercises;
+        existing.comment = updated.comment;
+        return workoutRepo.save(existing);
+    }
+
+    fun deleteWorkout(id: String) {
+        if (!exerciseRepo.existsById(id)) {
+            throw NoSuchElementException("No exercise with id: $id");
+        }
+        return workoutRepo.deleteById(id);
     }
 
     // workoutlog management

@@ -9,4 +9,5 @@ import workouttracker.backend.model.enums.MuscleGroup
 interface ExerciseRepo : MongoRepository<Exercise, String> {
     fun findByName(name : String) : List<Exercise>
     fun findByMuscleGroup(muscleGroup: MuscleGroup): List<Exercise>
+    fun existsByName(name: String): Boolean
 }
