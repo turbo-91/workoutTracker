@@ -2,6 +2,7 @@ package workouttracker.backend.service
 
 import org.slf4j.Logger
 import org.slf4j.LoggerFactory
+import workouttracker.backend.exception.ExerciseNotFoundException
 import workouttracker.backend.model.Exercise
 import workouttracker.backend.repository.ExerciseRepo
 import java.util.*
@@ -24,7 +25,7 @@ class ExerciseService(
 
     fun getExerciseByName(name: String): Optional<Exercise> {
         if (!exerciseRepo.existsByName(name)) {
-            throw NoSuchElementException("No exercise with name $name"); // implement custom exception management later
+            throw ExerciseNotFoundException("No exercise with name $name"); // implement custom exception management later
         }
         return exerciseRepo.findByName(name)
     }
@@ -36,7 +37,7 @@ class ExerciseService(
 
     fun updateExercise(id: String, updated: Exercise): Exercise {
         val existing = exerciseRepo.findById(id)
-            .orElseThrow{NoSuchElementException("Exercise with id: $id not found")};
+            .orElseThrow{ExerciseNotFoundException("Exercise with id: $id not found")};
         existing.name = updated.name;
         existing.muscleGroup = updated.muscleGroup;
         existing.weight = updated.weight;
@@ -47,7 +48,7 @@ class ExerciseService(
 
     fun deleteExercise(id: String) {
         if (!exerciseRepo.existsById(id)) {
-            throw NoSuchElementException("No exercise with id $id"); // implement custom exception management later
+            throw ExerciseNotFoundException("No exercise with id $id"); // implement custom exception management later
         }
         exerciseRepo.deleteById(id);
     }
