@@ -1,10 +1,7 @@
 package workouttracker.backend
 
 import org.springframework.http.ResponseEntity
-import org.springframework.web.bind.annotation.GetMapping
-import org.springframework.web.bind.annotation.PathVariable
-import org.springframework.web.bind.annotation.RequestMapping
-import org.springframework.web.bind.annotation.RestController
+import org.springframework.web.bind.annotation.*
 import workouttracker.backend.exception.ExerciseNotFoundException
 import workouttracker.backend.model.Exercise
 import workouttracker.backend.service.ExerciseService
@@ -19,7 +16,7 @@ class ExerciseController(private val exerciseService: ExerciseService) {
         return ResponseEntity.ok(exerciseService.getAllExercises())
     }
 
-    @GetMapping
+    @GetMapping("/id/{id}")
     fun getExerciseById(@PathVariable id: String): ResponseEntity<Exercise> {
         val exercise = exerciseService
             .getExerciseById(id)
@@ -37,5 +34,31 @@ class ExerciseController(private val exerciseService: ExerciseService) {
             .orElseThrow { ExerciseNotFoundException("Exercise with name \"$name\" not found") }
         return ResponseEntity.ok(exercise)
     }
+
+    @PostMapping
+    fun createExercise(@RequestBody exercise: Exercise): ResponseEntity<Exercise> {
+        return ResponseEntity.ok(exerciseService.createExercise(exercise))
+    }
+
+    @PutMapping("/{id}/update")
+    fun updateExercise(
+        @PathVariable id: String,
+        @RequestBody exercise: Exercise
+    ): ResponseEntity<Exercise> {
+        val existing = exerciseService.getExerciseById(id)
+            .orElseThrow { ExerciseNotFoundException("Exercise with id $id not found") }
+        val updated = exerciseService.updateExercise(id, exercise)
+        return ResponseEntity.ok(updated)
+    }
+
+    @DeleteMapping("/{id}")
+    fun deleteExercise(@PathVariable id: String): ResponseEntity<Exercise> {
+        val toDelete = exerciseService.getExerciseById(id)
+            .orElseThrow { ExerciseNotFoundException("…") }
+        exerciseService.deleteExercise(id)
+        return ResponseEntity.ok(toDelete)
+    }
+
+
 
 }
