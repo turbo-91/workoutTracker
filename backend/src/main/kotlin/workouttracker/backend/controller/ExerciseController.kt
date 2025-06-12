@@ -1,14 +1,13 @@
-package workouttracker.backend
+package workouttracker.backend.controller
 
 import org.springframework.http.ResponseEntity
 import org.springframework.web.bind.annotation.*
 import workouttracker.backend.exception.ExerciseNotFoundException
 import workouttracker.backend.model.Exercise
 import workouttracker.backend.service.ExerciseService
-import java.util.*
 
 @RestController
-@RequestMapping("/exercise")
+@RequestMapping("api/exercise")
 class ExerciseController(private val exerciseService: ExerciseService) {
 
     @GetMapping
@@ -21,7 +20,6 @@ class ExerciseController(private val exerciseService: ExerciseService) {
         val exercise = exerciseService
             .getExerciseById(id)
             .orElseThrow {ExerciseNotFoundException("Exercise with id $id not found") }
-
         return ResponseEntity.ok(exercise)
     }
 
@@ -51,7 +49,7 @@ class ExerciseController(private val exerciseService: ExerciseService) {
         return ResponseEntity.ok(updated)
     }
 
-    @DeleteMapping("/{id}")
+    @DeleteMapping("/{id}/delete")
     fun deleteExercise(@PathVariable id: String): ResponseEntity<Exercise> {
         val toDelete = exerciseService.getExerciseById(id)
             .orElseThrow { ExerciseNotFoundException("…") }
