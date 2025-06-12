@@ -19,8 +19,6 @@ class WorkoutService(
     private val workoutRepo: WorkoutRepo,
     private val workoutLogRepo: WorkoutLogRepo
 ) {
-
-
     companion object {
         private val logger: Logger = LoggerFactory.getLogger(WorkoutService::class.java)
     }
