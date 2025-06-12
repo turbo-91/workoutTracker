@@ -2,6 +2,7 @@ package workouttracker.backend.service
 
 import org.slf4j.Logger
 import org.slf4j.LoggerFactory
+import org.springframework.stereotype.Service
 import workouttracker.backend.exception.WorkoutLogNotFoundException
 import workouttracker.backend.model.WorkoutLog
 import workouttracker.backend.model.enums.Mon
@@ -10,6 +11,7 @@ import workouttracker.backend.repository.WorkoutLogRepo
 import java.time.LocalDateTime
 import java.util.*
 
+@Service
 class WorkoutLogService(private val workoutLogRepo: WorkoutLogRepo) {
 
     companion object {

@@ -2,12 +2,13 @@ package workouttracker.backend.service
 
 import org.slf4j.Logger
 import org.slf4j.LoggerFactory
+import org.springframework.stereotype.Service
 import workouttracker.backend.exception.ExerciseNotFoundException
 import workouttracker.backend.model.Exercise
 import workouttracker.backend.repository.ExerciseRepo
 import java.util.*
-import kotlin.NoSuchElementException
 
+@Service
 class ExerciseService(
     private val exerciseRepo: ExerciseRepo) {
 
