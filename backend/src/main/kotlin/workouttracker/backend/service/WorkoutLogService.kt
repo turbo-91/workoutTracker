@@ -4,11 +4,11 @@ import org.slf4j.Logger
 import org.slf4j.LoggerFactory
 import workouttracker.backend.exception.WorkoutLogNotFoundException
 import workouttracker.backend.model.WorkoutLog
+import workouttracker.backend.model.enums.Mon
 import workouttracker.backend.model.enums.TrainingGoal
 import workouttracker.backend.repository.WorkoutLogRepo
 import java.time.LocalDateTime
 import java.util.*
-import kotlin.NoSuchElementException
 
 class WorkoutLogService(private val workoutLogRepo: WorkoutLogRepo) {
 
@@ -31,12 +31,29 @@ class WorkoutLogService(private val workoutLogRepo: WorkoutLogRepo) {
         return workoutLogRepo.findByCreatedAt(createdAt);
     }
 
-    fun getWorkoutLogByTrainingGoal(trainingGoal: TrainingGoal): List<WorkoutLog> {
+    fun getWorkoutLogsByDateRange(startDate: LocalDateTime, endDate: LocalDateTime): List<WorkoutLog> {
+        return workoutLogRepo.findByCreatedAtBetween(startDate, endDate);
+    }
+
+    fun getWorkOutLogsByMonth(mon: Mon): List<WorkoutLog> {
+        return workoutLogRepo.findWorkoutLogsByMon(mon)
+    }
+
+    fun getLatestWorkoutLogs(date: LocalDateTime): List<WorkoutLog> {
+        return workoutLogRepo.findFiveLatestWorkoutLogs(date);
+    }
+
+    fun getWorkoutLogsByTrainingGoal(trainingGoal: TrainingGoal): List<WorkoutLog> {
         return workoutLogRepo.findByTrainingGoal(trainingGoal);
     }
 
     fun getWorkoutLogByWorkout(workoutId: String): List<WorkoutLog> {
         return workoutLogRepo.findByWorkoutId(workoutId);
+    }
+
+    fun getLatestWorkoutLogByWorkoutId(workoutId: String): WorkoutLog {
+        return workoutLogRepo.findTopByWorkoutIdOrderByCreatedAtDesc(workoutId)
+            .orElseThrow { WorkoutLogNotFoundException("The latest workout log of the workout with the id $workoutId could not be found.") }
     }
 
     fun createWorkoutLog(workoutLog: WorkoutLog): WorkoutLog {
