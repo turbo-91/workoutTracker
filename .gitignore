@@ -1,0 +1,15 @@
+# IntelliJ IDEA
+.idea/
+*.iml
+out/
+
+# Maven build output
+**/target/
+
+# macOS
+.DS_Store
+
+# Local environment variables and secrets
+.env
+.env.*
+!.env.example
