@@ -1,4 +1,4 @@
-package com.tjost.workouttracker;
+package com.tjost.workouttracker.model;
 
 import jakarta.persistence.*;
 

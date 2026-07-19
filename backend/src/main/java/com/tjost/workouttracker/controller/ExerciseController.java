@@ -1,5 +1,7 @@
-package com.tjost.workouttracker;
+package com.tjost.workouttracker.controller;
 
+import com.tjost.workouttracker.model.Exercise;
+import com.tjost.workouttracker.repository.ExerciseRepository;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
