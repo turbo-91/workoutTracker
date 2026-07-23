@@ -32,7 +32,8 @@ public class ExerciseService {
         if (exerciseRepo.existsByNameIgnoreCase(name)) {
             throw new ExerciseAlreadyExistsException(name);
         }
-        return new Exercise(name);
+
+        return exerciseRepo.save(new Exercise(name));
     }
 
     @Transactional
