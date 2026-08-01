@@ -46,9 +46,9 @@ public class WorkoutPlanController {
     @PutMapping("/{id}")
     public WorkoutPlan updateWorkoutPlan(
             @PathVariable Long id,
-            @RequestBody WorkoutPlan plan
+            @RequestBody WorkoutPlanRequest request
     ) {
-        return planService.updateWorkoutPlan(id, plan);
+        return planService.updateWorkoutPlan(id, request);
     }
 
     @DeleteMapping("/{id}")

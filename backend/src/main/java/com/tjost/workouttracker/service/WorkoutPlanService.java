@@ -1,5 +1,6 @@
 package com.tjost.workouttracker.service;
 
+import com.tjost.workouttracker.dto.WorkoutPlanRequest;
 import com.tjost.workouttracker.exception.PlanAlreadyExistsException;
 import com.tjost.workouttracker.exception.PlanNotFoundException;
 import com.tjost.workouttracker.model.WorkoutPlan;
@@ -44,14 +45,14 @@ public class WorkoutPlanService {
     @Transactional
     public WorkoutPlan updateWorkoutPlan(
             Long planId,
-            WorkoutPlan updatedPlan
+            WorkoutPlanRequest updatedPlan
     ) {
         WorkoutPlan existingPlan = planRepo.findById(planId)
                 .orElseThrow(() -> new PlanNotFoundException(planId));
 
-        existingPlan.setDay(updatedPlan.getDay());
-        existingPlan.setName(updatedPlan.getName());
-        existingPlan.setComment(updatedPlan.getComment());
+        existingPlan.setDay(updatedPlan.day());
+        existingPlan.setName(updatedPlan.name());
+        existingPlan.setComment(updatedPlan.comment());
 
         return existingPlan;
     }
