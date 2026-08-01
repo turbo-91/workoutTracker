@@ -1,5 +1,6 @@
 package com.tjost.workouttracker.service;
 
+import com.tjost.workouttracker.dto.WorkoutPlanRequest;
 import com.tjost.workouttracker.exception.PlanAlreadyExistsException;
 import com.tjost.workouttracker.exception.PlanNotFoundException;
 import com.tjost.workouttracker.model.WorkoutPlan;
@@ -162,11 +163,11 @@ class WorkoutPlanServiceTest {
         // GIVEN
         Long planId = 1L;
 
-        WorkoutPlan updatedPlan = WorkoutPlan.builder()
-                .day(Day.DAY3)
-                .name("Leg Day")
-                .comment("Quads, hamstrings and calves")
-                .build();
+        WorkoutPlanRequest updatedPlan = new WorkoutPlanRequest(
+                Day.DAY3,
+                "Leg Day",
+                "Quads, hamstrings and calves"
+        );
 
         when(planRepo.findById(planId))
                 .thenReturn(Optional.of(workoutPlan));
@@ -194,11 +195,11 @@ class WorkoutPlanServiceTest {
         // GIVEN
         Long planId = 1L;
 
-        WorkoutPlan updatedPlan = WorkoutPlan.builder()
-                .day(Day.DAY3)
-                .name("Leg Day")
-                .comment("Quads, hamstrings and calves")
-                .build();
+        WorkoutPlanRequest updatedPlan = new WorkoutPlanRequest(
+                Day.DAY3,
+                "Leg Day",
+                "Quads, hamstrings and calves"
+        );
 
         when(planRepo.findById(planId))
                 .thenReturn(Optional.empty());
