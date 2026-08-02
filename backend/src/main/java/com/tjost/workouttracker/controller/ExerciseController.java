@@ -1,7 +1,7 @@
 package com.tjost.workouttracker.controller;
 
+import com.tjost.workouttracker.dto.ExerciseRequest;
 import com.tjost.workouttracker.model.Exercise;
-import com.tjost.workouttracker.repository.ExerciseRepository;
 import com.tjost.workouttracker.service.ExerciseService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
@@ -14,13 +14,12 @@ import java.util.List;
 @RequiredArgsConstructor
 public class ExerciseController {
 
-    private final ExerciseRepository exerciseRepo;
     private final ExerciseService exerciseService;
 
     @PostMapping
     @ResponseStatus(HttpStatus.CREATED)
-    public Exercise createExercise(@RequestBody Exercise exercise) {
-        return exerciseService.createExercise(exercise.getName());
+    public Exercise createExercise(@RequestBody ExerciseRequest exercise) {
+        return exerciseService.createExercise(exercise.name());
     }
 
     @GetMapping
@@ -36,9 +35,9 @@ public class ExerciseController {
     @PutMapping("/{id}")
     public Exercise updateExercise(
             @PathVariable Long id,
-            @RequestBody Exercise exercise
+            @RequestBody ExerciseRequest exercise
     ) {
-        return exerciseService.updateExercise(id, exercise.getName());
+        return exerciseService.updateExercise(id, exercise.name());
     }
 
     @DeleteMapping("/{id}")

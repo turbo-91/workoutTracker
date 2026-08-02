@@ -40,10 +40,7 @@ public class ExerciseService {
     public Exercise updateExercise(Long exerciseId, String newName) {
         Exercise exercise = exerciseRepo.findById(exerciseId)
                 .orElseThrow(() -> new ExerciseNotFoundException(exerciseId));
-        logger.debug("Updating exercise: {}", exercise.getName());
         exercise.setName(newName);
-        logger.info("Exercise name updated to {}", newName);
-
         return exercise;
     }
 
