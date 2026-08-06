@@ -19,6 +19,7 @@ import java.util.List;
 @RestController
 @RequestMapping("/api/workout-plans")
 @RequiredArgsConstructor
+@CrossOrigin(origins = "http://localhost:5173")
 public class WorkoutPlanController {
 
     private final WorkoutPlanRepository planRepo;
@@ -44,7 +45,7 @@ public class WorkoutPlanController {
         return planService.getWorkoutPlanById(id);
     }
 
-    @GetMapping("/{id}/{details}")
+    @GetMapping("/{id}/details")
     public WorkoutPlanDetailsDTO getWorkoutPlanDetailsById(@PathVariable Long id) { return planService.getWorkoutPlanDetailsById(id); }
 
     @PutMapping("/{id}")
