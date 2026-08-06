@@ -1,5 +1,6 @@
 package com.tjost.workouttracker.controller;
 
+import com.tjost.workouttracker.dto.WorkoutPlanDetailsDTO;
 import com.tjost.workouttracker.dto.WorkoutPlanRequest;
 import com.tjost.workouttracker.model.Exercise;
 import com.tjost.workouttracker.model.WorkoutPlan;
@@ -42,6 +43,9 @@ public class WorkoutPlanController {
     public WorkoutPlan getWorkoutPlanById(@PathVariable Long id) {
         return planService.getWorkoutPlanById(id);
     }
+
+    @GetMapping("/{id}/{details}")
+    public WorkoutPlanDetailsDTO getWorkoutPlanDetailsById(@PathVariable Long id) { return planService.getWorkoutPlanDetailsById(id); }
 
     @PutMapping("/{id}")
     public WorkoutPlan updateWorkoutPlan(

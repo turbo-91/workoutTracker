@@ -1,10 +1,15 @@
 package com.tjost.workouttracker.service;
 
+import com.tjost.workouttracker.dto.WorkoutPlanDetailsDTO;
+import com.tjost.workouttracker.dto.WorkoutPlanItemDetailsDTO;
 import com.tjost.workouttracker.dto.WorkoutPlanRequest;
 import com.tjost.workouttracker.exception.PlanAlreadyExistsException;
 import com.tjost.workouttracker.exception.PlanNotFoundException;
+import com.tjost.workouttracker.model.Exercise;
 import com.tjost.workouttracker.model.WorkoutPlan;
+import com.tjost.workouttracker.model.WorkoutPlanItem;
 import com.tjost.workouttracker.model.enums.Day;
+import com.tjost.workouttracker.repository.WorkoutPlanItemRepository;
 import com.tjost.workouttracker.repository.WorkoutPlanRepository;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -13,6 +18,8 @@ import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 
+import java.math.BigDecimal;
+import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 import java.util.Optional;
@@ -26,11 +33,14 @@ class WorkoutPlanServiceTest {
 
     @Mock
     private WorkoutPlanRepository planRepo;
+    @Mock
+    private WorkoutPlanItemRepository itemRepo;
 
     @InjectMocks
     private WorkoutPlanService workoutPlanService;
 
     private WorkoutPlan workoutPlan;
+
 
     @BeforeEach
     void setUp() {
@@ -101,6 +111,56 @@ class WorkoutPlanServiceTest {
                 () -> workoutPlanService.getWorkoutPlanById(planId)
         );
 
+        verify(planRepo).findById(planId);
+    }
+
+    @Test
+    void getWorkoutPlanDetailsById_shouldReturnWorkoutPlanDetails() {
+        // GIVEN
+        Long planId = 1L;
+
+        Exercise exercise = Exercise.builder()
+                .name("Bench Press")
+                .build();
+
+        WorkoutPlanItem item = WorkoutPlanItem.builder()
+                .workoutPlan(workoutPlan)
+                .exercise(exercise)
+                .exercisePosition((short) 1)
+                .targetWeightKg(new BigDecimal("60.00"))
+                .targetRepMin((short) 8)
+                .targetRepMax((short) 12)
+                .comment("Pause at the bottom")
+                .build();
+
+        when(itemRepo
+                .findAllByWorkoutPlan_PlanIdOrderByExercisePositionAsc(planId))
+                .thenReturn(List.of(item));
+
+        when(planRepo.findById(planId))
+                .thenReturn(Optional.of(workoutPlan));
+
+        // WHEN
+        WorkoutPlanDetailsDTO result =
+                workoutPlanService.getWorkoutPlanDetailsById(planId);
+
+        // THEN
+        assertEquals(workoutPlan.getDay(), result.day());
+        assertEquals(workoutPlan.getName(), result.name());
+        assertEquals(workoutPlan.getComment(), result.comment());
+        assertEquals(1, result.items().size());
+
+        WorkoutPlanItemDetailsDTO itemResult = result.items().get(0);
+
+        assertEquals((short) 1, itemResult.exercisePosition());
+        assertEquals("Bench Press", itemResult.exerciseName());
+        assertEquals(new BigDecimal("60.00"), itemResult.targetWeightKg());
+        assertEquals((short) 8, itemResult.targetRepMin());
+        assertEquals((short) 12, itemResult.targetRepMax());
+        assertEquals("Pause at the bottom", itemResult.comment());
+
+        verify(itemRepo)
+                .findAllByWorkoutPlan_PlanIdOrderByExercisePositionAsc(planId);
         verify(planRepo).findById(planId);
     }
 
