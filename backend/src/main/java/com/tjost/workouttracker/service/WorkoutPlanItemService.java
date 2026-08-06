@@ -1,6 +1,7 @@
 package com.tjost.workouttracker.service;
 
 import com.tjost.workouttracker.dto.WorkoutPlanItemRequest;
+import com.tjost.workouttracker.exception.ItemNotFoundExceptionPlanId;
 import com.tjost.workouttracker.exception.PlanNotFoundException;
 import com.tjost.workouttracker.exception.ExerciseNotFoundException;
 import com.tjost.workouttracker.model.Exercise;
@@ -15,6 +16,8 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
 import java.math.BigDecimal;
+import java.util.List;
+
 
 @Service
 @RequiredArgsConstructor
@@ -27,6 +30,17 @@ public class WorkoutPlanItemService {
     public WorkoutPlanItem getWorkoutPlanItemById(Long planItemId) {
         return itemRepo.findById(planItemId)
                 .orElseThrow(() -> new ItemNotFoundException(planItemId));
+    }
+
+    public List<WorkoutPlanItem> getWorkoutPlanItemsByPlanId(Long planId) {
+        List<WorkoutPlanItem> items =
+                itemRepo.findAllByWorkoutPlan_PlanIdOrderByExercisePositionAsc(planId);
+
+        if (items.isEmpty()) {
+            throw new ItemNotFoundExceptionPlanId(planId);
+        }
+
+        return items;
     }
 
     public WorkoutPlanItem createWorkoutPlanItem (
