@@ -87,6 +87,7 @@ public class WorkoutPlanItemService {
 
         return existingItem;
     }
+
        @Transactional
     public void deleteWorkoutPlanItem(Long itemId) {
         WorkoutPlanItem item = itemRepo.findById(itemId)
