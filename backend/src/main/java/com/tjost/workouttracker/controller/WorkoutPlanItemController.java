@@ -14,7 +14,6 @@ import org.springframework.web.bind.annotation.*;
 @RequiredArgsConstructor
 public class WorkoutPlanItemController {
 
-    private final WorkoutPlanItemRepository itemRepo;
     private final WorkoutPlanItemService itemService;
 
     @PostMapping
