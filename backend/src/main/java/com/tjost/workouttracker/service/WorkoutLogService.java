@@ -22,18 +22,17 @@ public class WorkoutLogService {
     private final WorkoutPlanRepository planRepo;
     private final WorkoutLogRepository logRepo;
 
-    public WorkoutLog getWorkOutLogById(Long logId) {
+    public WorkoutLog getWorkoutLogById(Long logId) {
         return logRepo.findById(logId)
                 .orElseThrow(() -> new LogNotFoundException(logId));
     }
 
-    public WorkoutLog getWorkOutLogByWorkoutDate(LocalDate workoutDate) {
+    public WorkoutLog getWorkoutLogByWorkoutDate(LocalDate workoutDate) {
         return logRepo.findByWorkoutDate(workoutDate)
                 .orElseThrow(() -> new LogNotFoundExceptionWorkoutDate(workoutDate));
     }
 
     public WorkoutLog createWorkoutLog (
-            Long logId,
             Long planId,
             LocalDate workoutDate,
             String comment,
