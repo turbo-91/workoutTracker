@@ -1,6 +1,7 @@
 package com.tjost.workouttracker.service;
 
 import com.tjost.workouttracker.dto.WorkoutLogRequest;
+import com.tjost.workouttracker.exception.LogAlreadyExistsException;
 import com.tjost.workouttracker.exception.LogNotFoundException;
 import com.tjost.workouttracker.exception.LogNotFoundExceptionWorkoutDate;
 import com.tjost.workouttracker.exception.PlanNotFoundException;
@@ -31,6 +32,10 @@ public class WorkoutLogService {
         WorkoutPlan plan = planRepo.findById(planId)
                 .orElseThrow(() -> new PlanNotFoundException(planId));
 
+        if (logRepo.existsByWorkoutDate(workoutDate)) {
+            throw new LogAlreadyExistsException(workoutDate);
+        }
+
         WorkoutLog log = WorkoutLog.builder()
                 .workoutPlan(plan)
                 .workoutDate(workoutDate)
@@ -56,6 +61,10 @@ public class WorkoutLogService {
         WorkoutLog existingLog = logRepo.findById(logId)
                 .orElseThrow(() -> new LogNotFoundException(logId));
 
+        WorkoutPlan plan = planRepo.findById(request.planId())
+                .orElseThrow(() -> new PlanNotFoundException(request.planId()));
+
+        existingLog.setWorkoutPlan(plan);
         existingLog.setWorkoutDate(request.workoutDate());
         existingLog.setComment(request.comment());
         existingLog.setCreatedAt(request.createdAt());
