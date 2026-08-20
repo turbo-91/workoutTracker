@@ -1,6 +1,7 @@
 package com.tjost.workouttracker.controller;
 
 import com.tjost.workouttracker.dto.WorkoutLogRequest;
+import com.tjost.workouttracker.dto.WorkoutLogResponse;
 import com.tjost.workouttracker.model.WorkoutLog;
 import com.tjost.workouttracker.service.WorkoutLogService;
 import jakarta.validation.Valid;
@@ -20,41 +21,57 @@ public class WorkoutLogController {
 
     @PostMapping
     @ResponseStatus(HttpStatus.CREATED)
-    public WorkoutLog createWorkoutLog(@Valid @RequestBody
+    public WorkoutLogResponse createWorkoutLog(@Valid @RequestBody
                                            WorkoutLogRequest request) {
-        return logService.createWorkoutLog(
+        WorkoutLog log = logService.createWorkoutLog(
                 request.planId(),
                 request.workoutDate(),
                 request.comment(),
-                request.createdAt());
+                request.createdAt()
+        );
+        return toResponse(log);
     }
 
     @GetMapping("/{id}")
-    public WorkoutLog getWorkoutLogById(@PathVariable Long id) {
-        return logService.getWorkoutLogById(id);
+    public WorkoutLogResponse getWorkoutLogById(@PathVariable Long id) {
+        WorkoutLog log = logService.getWorkoutLogById(id);
+        return toResponse(log);
     }
 
     @GetMapping("/by-date/{workoutDate}")
-    public WorkoutLog getWorkoutLogByWorkoutDate(
+    public WorkoutLogResponse getWorkoutLogByWorkoutDate(
             @PathVariable
             @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) // GET /api/workout-logs/by-date/2026-08-19
             LocalDate workoutDate // Spring transforms ISO date format into LocalDate
     ) {
-        return logService.getWorkoutLogByWorkoutDate(workoutDate);
+        WorkoutLog log = logService.getWorkoutLogByWorkoutDate(workoutDate);
+        return toResponse(log);
     }
 
     @PutMapping("/{id}")
-    public WorkoutLog updateWorkoutLog(
+    public WorkoutLogResponse updateWorkoutLog(
             @PathVariable Long id,
-            @Valid @RequestBody WorkoutLogRequest log
+            @Valid @RequestBody WorkoutLogRequest request
     ) {
-        return logService.updateWorkoutLog(id, log);
+        WorkoutLog log = logService.updateWorkoutLog(id, request);
+
+        return toResponse(log);
     }
 
     @DeleteMapping("/{id}")
     @ResponseStatus(HttpStatus.NO_CONTENT)
     public void deleteWorkoutLog(@PathVariable Long id) {
         logService.deleteWorkoutLog(id);
+    }
+
+    private WorkoutLogResponse toResponse(WorkoutLog log) {
+        return new WorkoutLogResponse(
+                log.getLogId(),
+                log.getWorkoutPlan().getPlanId(),
+                log.getWorkoutDate(),
+                log.getComment(),
+                log.getCreatedAt()
+        );
     }
 
 }
