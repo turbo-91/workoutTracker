@@ -1,6 +1,9 @@
 package com.tjost.workouttracker.controller;
 
+import com.tjost.workouttracker.dto.WorkoutLogResponse;
 import com.tjost.workouttracker.dto.WorkoutPlanItemRequest;
+import com.tjost.workouttracker.dto.WorkoutPlanItemResponse;
+import com.tjost.workouttracker.model.WorkoutLog;
 import com.tjost.workouttracker.model.WorkoutPlanItem;
 import com.tjost.workouttracker.repository.WorkoutPlanItemRepository;
 import com.tjost.workouttracker.service.WorkoutPlanItemService;
@@ -18,9 +21,9 @@ public class WorkoutPlanItemController {
 
     @PostMapping
     @ResponseStatus(HttpStatus.CREATED)
-    public WorkoutPlanItem createWorkoutPlanItem(@Valid @RequestBody
+    public WorkoutPlanItemResponse createWorkoutPlanItem(@Valid @RequestBody
                                                  WorkoutPlanItemRequest request) {
-        return itemService.createWorkoutPlanItem(
+        WorkoutPlanItem item = itemService.createWorkoutPlanItem(
                 request.planId(),
                 request.exerciseId(),
                 request.exercisePosition(),
@@ -28,23 +31,40 @@ public class WorkoutPlanItemController {
                 request.targetRepMin(),
                 request.targetRepMax(),
                 request.comment());
+        return toResponse(item);
     }
 
     @GetMapping("/{id}")
-    public WorkoutPlanItem getWorkoutPlanItemById(@PathVariable Long id){
-        return itemService.getWorkoutPlanItemById(id);
+    public WorkoutPlanItemResponse getWorkoutPlanItemById(@PathVariable Long id){
+        WorkoutPlanItem item = itemService.getWorkoutPlanItemById(id);
+        return toResponse(item);
     }
 
     @PutMapping("/{id}")
-    public WorkoutPlanItem updateWorkoutPlanItem(
+    public WorkoutPlanItemResponse updateWorkoutPlanItem(
             @PathVariable Long id, @Valid @RequestBody WorkoutPlanItemRequest item) {
-        return itemService.updateWorkoutPlanItem(id, item);
+        WorkoutPlanItem updatedItem = itemService.updateWorkoutPlanItem(id, item);
+        return toResponse(updatedItem);
     }
 
     @DeleteMapping("/{id}")
     @ResponseStatus(HttpStatus.NO_CONTENT)
     public void deleteWorkoutPlanItem(@PathVariable Long id) {
         itemService.deleteWorkoutPlanItem(id);
+    }
+
+    private WorkoutPlanItemResponse toResponse(WorkoutPlanItem item) {
+        return new WorkoutPlanItemResponse(
+                item.getPlanItemId(),
+                item.getWorkoutPlan().getPlanId(),
+                item.getExercise().getExerciseId(),
+                item.getExercisePosition(),
+                item.getTargetWeightKg(),
+                item.getTargetRepMin(),
+                item.getTargetRepMax(),
+                item.getComment()
+
+        );
     }
 
 

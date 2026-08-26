@@ -1,8 +1,11 @@
 package com.tjost.workouttracker.controller;
 
+import com.tjost.workouttracker.dto.WorkoutLogResponse;
 import com.tjost.workouttracker.dto.WorkoutPlanDetailsDTO;
 import com.tjost.workouttracker.dto.WorkoutPlanRequest;
+import com.tjost.workouttracker.dto.WorkoutPlanResponse;
 import com.tjost.workouttracker.model.Exercise;
+import com.tjost.workouttracker.model.WorkoutLog;
 import com.tjost.workouttracker.model.WorkoutPlan;
 import com.tjost.workouttracker.model.enums.Day;
 import com.tjost.workouttracker.repository.ExerciseRepository;
@@ -27,38 +30,53 @@ public class WorkoutPlanController {
 
     @PostMapping
     @ResponseStatus(HttpStatus.CREATED)
-    public WorkoutPlan createWorkoutPlan(@Valid @RequestBody WorkoutPlanRequest request) {
-        return planService.createWorkoutPlan(
+    public WorkoutPlanResponse createWorkoutPlan(@Valid @RequestBody WorkoutPlanRequest request) {
+        WorkoutPlan plan = planService.createWorkoutPlan(
                 request.day(),
                 request.name(),
                 request.comment()
         );
+        return toResponse(plan);
     }
 
     @GetMapping
-    public List<WorkoutPlan> getAllWorkoutPlans() {
-        return planService.getAllWorkoutPlans();
+    public List<WorkoutPlanResponse> getAllWorkoutPlans() {
+        return planService.getAllWorkoutPlans()
+                .stream()
+                .map(this::toResponse)
+                .toList();
     }
 
     @GetMapping("/{id}")
-    public WorkoutPlan getWorkoutPlanById(@PathVariable Long id) {
-        return planService.getWorkoutPlanById(id);
+    public WorkoutPlanResponse getWorkoutPlanById(@PathVariable Long id) {
+        WorkoutPlan plan = planService.getWorkoutPlanById(id);
+        return toResponse(plan);
     }
 
     @GetMapping("/{id}/details")
     public WorkoutPlanDetailsDTO getWorkoutPlanDetailsById(@PathVariable Long id) { return planService.getWorkoutPlanDetailsById(id); }
 
     @PutMapping("/{id}")
-    public WorkoutPlan updateWorkoutPlan(
+    public WorkoutPlanResponse updateWorkoutPlan(
             @PathVariable Long id,
             @RequestBody WorkoutPlanRequest request
     ) {
-        return planService.updateWorkoutPlan(id, request);
+        WorkoutPlan plan = planService.updateWorkoutPlan(id, request);
+        return toResponse(plan);
     }
 
     @DeleteMapping("/{id}")
     @ResponseStatus(HttpStatus.NO_CONTENT)
     public void deleteWorkoutPlan(@PathVariable Long id) {
         planService.deleteWorkoutPlan(id);
+    }
+
+    private WorkoutPlanResponse toResponse(WorkoutPlan plan) {
+        return new WorkoutPlanResponse(
+                plan.getPlanId(),
+                plan.getDay(),
+                plan.getName(),
+                plan.getComment()
+        );
     }
 }
