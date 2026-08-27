@@ -10,7 +10,7 @@ import java.math.BigDecimal;
 @Getter
 @Setter
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
-public class WarmUpSet {
+public class WarmUp {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -36,4 +36,21 @@ public class WarmUpSet {
 
     @Column(name = "rest_seconds", nullable = false)
     private short restSeconds;
+
+    @Builder
+    public WarmUp(
+            WorkoutPlanItem workoutPlanItem,
+            short setNumber,
+            BigDecimal weightKg,
+            short repMin,
+            short repMax,
+            short restSeconds
+    ) {
+        this.workoutPlanItem = workoutPlanItem;
+        this.setNumber = setNumber;
+        this.weightKg = weightKg;
+        this.repMin = repMin;
+        this.repMax = repMax;
+        this.restSeconds = restSeconds;
+    }
 }
